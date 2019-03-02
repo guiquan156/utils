@@ -1,5 +1,4 @@
-const { assert } = require('chai');
-const utils = require('../index');
+var assert = chai.assert;
 
 describe('Utils', function () {
     describe('#repeat', function () {

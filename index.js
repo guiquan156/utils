@@ -6,7 +6,7 @@
         // CommonJS
         module.exports = factory();
     } else {
-        root.returnExports = factory();
+        root.utils = factory();
     }
 }(this, function () {
     var utils = {
