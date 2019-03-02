@@ -12,13 +12,16 @@
     var utils = {
 
         // repeat a str n times and return it;
-        repeat: function (str, n) {
+        repeat: function (str, times) {
             var ret = '';
             str = str + '';
+            
+            if (times < 0) return '';
+
             if (String.prototype.repeat) { // es6 repeat
-                ret = str.repeat(padLen);
+                ret = str.repeat(times);
             } else {
-                ret = new Array(n + 1).join(str);
+                ret = new Array(times + 1).join(str);
             }
             return ret;
         },
