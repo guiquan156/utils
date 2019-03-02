@@ -4,7 +4,7 @@
   "description": "some utils",
   "main": "index.js",
   "scripts": {
-    "test": "mocha"
+    "test": "nyc mocha"
   },
   "keywords": [
     "utils"
@@ -13,6 +13,9 @@
   "license": "MIT",
   "devDependencies": {
     "chai": "^4.2.0",
-    "mocha": "^6.0.2"
-  }
+    "istanbul": "^0.4.5",
+    "mocha": "^6.0.2",
+    "nyc": "^13.3.0"
+  },
+  "dependencies": {}
 }

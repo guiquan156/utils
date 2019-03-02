@@ -10,3 +10,7 @@
 # misc
 .DS_Store
 
+# cover test
+/coverage
+/.nyc_output
+
