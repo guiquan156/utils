@@ -90,6 +90,27 @@
             }
 
             return scheme;
+        },
+
+        template: function () {
+
+        },
+
+        debounce: function () {
+
+        },
+
+        throttling: function () {
+
+        },
+
+        // only for String Array Object NaN undefined function
+        is: function (type, target) {
+            if (type === 'NaN') {
+                return target !== target;
+            }
+            return Object.prototype.toString.call(target).toLowerCase() ===
+                '[object ' + type.toLowerCase() + ']';
         }
     };
  
