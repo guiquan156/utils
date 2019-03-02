@@ -15,7 +15,7 @@
         repeat: function (str, times) {
             var ret = '';
             str = str + '';
-            
+
             if (times < 0) return '';
 
             if (String.prototype.repeat) { // es6 repeat
@@ -37,7 +37,7 @@
 
             // es6 pad
             if (String.prototype.padStart) {
-                return target[isBack ? 'padEnd' : 'padStart'](deltaLen, padStr);
+                return dist[isBack ? 'padEnd' : 'padStart'](distLen, padStr);
             }
 
             var repeat = utils.repeat(padStr, Math.ceil(deltaLen / padStr.length));
@@ -46,7 +46,7 @@
             if (isBack) {
                 dist = dist + repPad;
             } else {
-                dist = repPad + repeatPadStr;
+                dist = repPad + dist;
             }
 
             return dist;
