@@ -23,26 +23,27 @@
             return ret;
         },
 
-        // padding string by char
-        padChar: function (target, char, distLen, isBack) {
+        // padding string by padStr
+        pad: function (target, padStr, distLen, isBack) {
             var dist = target + '';
             var deltaLen = distLen - dist.length;
-            char = char + '' || '0';
+            padStr = padStr + '' || '0';
 
             // too long needn't padding :D
             if (dist.length >= distLen) return dist;
 
-            // es6 pad;
+            // es6 pad
             if (String.prototype.padStart) {
-                return target[isBack ? 'padEnd' : 'padStart'](deltaLen, char);
+                return target[isBack ? 'padEnd' : 'padStart'](deltaLen, padStr);
             }
 
-            var repeat = utils.repeat(char, deltaLen);
+            var repeat = utils.repeat(padStr, Math.ceil(deltaLen / padStr.length));
+            var repPad = repeat.slice(0, deltaLen);
 
             if (isBack) {
-                dist = dist + repeat;
+                dist = dist + repPad;
             } else {
-                dist = repeat + dist;
+                dist = repPad + repeatPadStr;
             }
 
             return dist;
@@ -80,7 +81,7 @@
                 scheme = scheme.replace(
                     new RegExp(k + '+', 'g'),
                     function (match) {
-                        return utiles.padChar(date[k], '0', match.length);
+                        return utiles.pad(date[k], '0', match.length);
                     }
                 );
             }
