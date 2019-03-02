@@ -84,7 +84,7 @@
                 scheme = scheme.replace(
                     new RegExp(k + '+', 'g'),
                     function (match) {
-                        return utiles.pad(date[k], '0', match.length);
+                        return utils.pad(dateInfo[k], '0', match.length);
                     }
                 );
             }
