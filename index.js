@@ -195,20 +195,41 @@
             '\'': '&#x27;'
         },
 
-        escape: function (html) {
+        escape: function (str) {
             var regExpStr = [];
             for (var k in utils.escapeStr) {
                 regExpStr.push(k);
             }
             regExpStr = '(' + regExpStr.join('|') + ')';
             var regExp = new RegExp(regExpStr, 'g');
-            return html.replace(regExp, function (match) {
-                return utils.escapeStr[match[0]];
+            return str.replace(regExp, function (match) {
+                return utils.escapeStr[match];
             });
         },
 
-        unescape: function () {
+        // return a new object that exchange key and value of input object
+        kvExchange: function (obj) {
+            var ret = {}
+            var is = utils.is;
+            for (var k in obj) {
+                // skip some values that can't be keys;
+                if (!is('Number', obj[k]) && !is('String', obj[k])) continue;
+                ret[obj[k]] = k; 
+            }
+            return ret;
+        },
 
+        unescape: function (str) {
+            var regExpStr = [];
+            var unEscapeStr = utils.kvExchange(utils.escapeStr);
+            for (var k in unEscapeStr) {
+                regExpStr.push('(?:' + k + ')');
+            }
+            regExpStr = '(' + regExpStr.join('|') + ')';
+            var regExp = new RegExp(regExpStr, 'g');
+            return str.replace(regExp, function (match) {
+                return unEscapeStr[match];
+            });
         },
 
         template: function (tpl, data, settings) {

@@ -184,6 +184,29 @@ describe('Utils', function () {
         });
     });
 
+    describe('#unescape', function () {
+        it("should replace &amp;&lt;&gt;&quot;&#96;&#x27; to '&<>\"`''", function () {
+            assert.equal('&<>"`\'', utils.unescape('&amp;&lt;&gt;&quot;&#96;&#x27;'));
+        });
+    });
+
+    describe('#kvExchange', function () {
+        it('should exchange the keys and value, and skip the value that is not Number and String', function () {
+            var origin = {
+                'a': '1',
+                'b': '2',
+                'c': 1,
+                'd': [],
+                'f': {}
+            };
+            var dist = {
+                '2': 'b',
+                1: 'c'
+            };
+            assert.deepEqual(dist, utils.kvExchange(origin));
+        });
+    });
+
     describe('#template', function () {
         it("should replace template by <%=%>", function () {
             var html = utils.template('<div><%=a%></div>', {a: 100});
