@@ -208,7 +208,7 @@
         },
 
         // return a new object that exchange key and value of input object
-        kvExchange: function (obj) {
+        invert: function (obj) {
             var ret = {}
             var is = utils.is;
             for (var k in obj) {
@@ -221,7 +221,7 @@
 
         unescape: function (str) {
             var regExpStr = [];
-            var unEscapeStr = utils.kvExchange(utils.escapeStr);
+            var unEscapeStr = utils.invert(utils.escapeStr);
             for (var k in unEscapeStr) {
                 regExpStr.push('(?:' + k + ')');
             }

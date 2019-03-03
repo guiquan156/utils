@@ -190,7 +190,7 @@ describe('Utils', function () {
         });
     });
 
-    describe('#kvExchange', function () {
+    describe('#invert', function () {
         it('should exchange the keys and value, and skip the value that is not Number and String', function () {
             var origin = {
                 'a': '1',
@@ -203,7 +203,7 @@ describe('Utils', function () {
                 '2': 'b',
                 1: 'c'
             };
-            assert.deepEqual(dist, utils.kvExchange(origin));
+            assert.deepEqual(dist, utils.invert(origin));
         });
     });
 
