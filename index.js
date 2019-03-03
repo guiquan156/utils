@@ -186,8 +186,40 @@
             escape: /<%-([\s\S]+?)%>/g
         },
 
+        escapeStr: {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            '`': '&#96;',
+            '\'': '&#x27;'
+        },
+
+        escape: function (html) {
+            var regExpStr = [];
+            for (var k in utils.escapeStr) {
+                regExpStr.push(k);
+            }
+            regExpStr = '(' + regExpStr.join('|') + ')';
+            var regExp = new RegExp(regExpStr, 'g');
+            return html.replace(regExp, function (match) {
+                return utils.escapeStr[match[0]];
+            });
+        },
+
+        unescape: function () {
+
+        },
+
         template: function (tpl, data, settings) {
             var settings = utils.extends({}, settings, utils.templateSettings);
+            data = data || {};
+            tpl = tpl.replace(settings.interpolate, "';ret+=$1;ret+='");
+            tpl = tpl.replace(settings.escape, "';ret+=_escape($1);ret+='");
+            tpl = tpl.replace(settings.evaluate, "';$1ret+='");
+            tpl = "var ret='';var _print=function(str){ret+=str;};with(data){ret+='" + tpl + "';}return ret;";
+
+            return new Function('data', '_escape', tpl)(data, utils.escape);
         },
 
         debounce: function () {

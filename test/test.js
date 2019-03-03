@@ -176,7 +176,35 @@ describe('Utils', function () {
             obj.b.b3 = 'b2';
             assert.deepEqual({a: {a: 'aa'}, b: 'b', c: 'cc', d: 'dd'}, target);
         });
+    });
 
+    describe('#escape', function () {
+        it("should replace '&<>\"`'' to &amp;&lt;&gt;&quot;&#96;&#x27;", function () {
+            assert.equal('&amp;&lt;&gt;&quot;&#96;&#x27;', utils.escape('&<>"`\''));
+        });
+    });
+
+    describe('#template', function () {
+        it("should replace template by <%=%>", function () {
+            var html = utils.template('<div><%=a%></div>', {a: 100});
+            assert.equal('<div>100</div>', html);
+        });
+        it("should replace template by <%%>", function () {
+            var html = utils.template('<div><%for(var i=0;i<3;i++){%><%=i%><%}%></div>');
+            assert.equal('<div>012</div>', html);
+        });
+        it("should replace template by <%-%>", function () {
+            var html = utils.template('<div><%-"&<>\\\"`\'"%></div>');
+            assert.equal('<div>&amp;&lt;&gt;&quot;&#96;&#x27;</div>', html);
+        });
+        it('can use _print() in <%%> to echo variable', function () {
+            var html = utils.template('<div><%for(var i=0;i<3;i++){_print(i);}%></div>');
+            assert.equal('<div>012</div>', html);
+        });
+        it('can use _escape() to translate strings', function () {
+            var html = utils.template('<div><%=_escape("&<>\\\"`\'")%></div>');
+            assert.equal('<div>&amp;&lt;&gt;&quot;&#96;&#x27;</div>', html);
+        });
     });
     
 });
