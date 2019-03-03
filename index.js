@@ -13,6 +13,7 @@
 
         noop: function () {},
 
+        // doesn’t consider set and map
         copy: function (obj) {
             var target;
             var is = utils.is;
@@ -30,6 +31,7 @@
             return target;
         },
 
+        // doesn’t consider set and map
         deepCopy: function (obj) {
             var target;
             var is = utils.is;
@@ -55,6 +57,7 @@
             return target;
         },
 
+        // doesn’t consider set and map
         extends: function (isDeep, target, /* , obj1, obj2, ... */) {
             var is = utils.is;
             var objs = [].slice.call(arguments);
@@ -89,7 +92,7 @@
                         }
                     }
                 } else {
-                    target = obj;
+                    target = obj; // is useful when obj is not an array or object;
                 }
             }
 
