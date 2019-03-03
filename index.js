@@ -11,6 +11,59 @@
 }(this, function () {
     var utils = {
 
+        noop: function () {},
+
+        extends: function (isDeep, target) {
+            var is = utils.is;
+            var objs = [].slice.call(arguments);
+            if (!is('Boolean', isDeep)) {
+                target = isDeep;
+                isDeep = false;
+                objs = objs.slice(1);
+            } else {
+                objs = objs.slice(2);
+            }
+
+            for (var i = 0; i < objs.length; i++) {
+                var obj = objs[i];
+                if (is('Array', target)) {
+                    for (var j = 0; j < obj.length; j++) {
+                        if (isDeep) {
+                            if (is('Array', obj[j])) {
+                                target[j] = [];
+                                utils.extends(true, target[j], obj[j]);
+                            } else if (is('Object', obj[j])) {
+                                target[j] = {};
+                                utils.extends(true, target[j], obj[j]);
+                            } else {
+                                target[j] = obj[j];
+                            }
+                        } else {
+                            target[j] = obj[j];
+                        }
+                    }
+                } else if (is('Object', target)) {
+                    for (var k in obj) {
+                        if (isDeep) {
+                            if (is('Array', obj[k])) {
+                                target[k] = [];
+                                utils.extends(true, target[k], obj[k]);
+                            } else if (is('Object', obj[k])) {
+                                target[k] = {};
+                                utils.extends(true, target[k], obj[k]);
+                            } else {
+                                target[k] = obj[k];
+                            }
+                        } else {
+                            target[k] = obj[k];
+                        }
+                    }                    
+                }
+            }
+
+            return target;
+        },
+
         // repeat a str n times and return it;
         repeat: function (str, times) {
             var ret = '';
@@ -92,8 +145,14 @@
             return scheme;
         },
 
-        template: function () {
+        templateSettings: {
+            evaluate: /<%([\s\S]+?)%>/g,
+            interpolate: /<%=([\s\S]+?)%>/g,
+            escape: /<%-([\s\S]+?)%>/g
+        },
 
+        template: function (tpl, data, settings) {
+            var settings = utils.extends({}, settings, utils.templateSettings);
         },
 
         debounce: function () {

@@ -4,60 +4,123 @@ const utils = require('../index');
 describe('Utils', function () {
     describe('#repeat', function () {
         it("should return '0000' when repeat string is '0' and repeat times is 4", function () {
-            assert.equal('0000', utils.repeat('0', 4));
+            assert.strictEqual('0000', utils.repeat('0', 4));
         });
         
         it("should return '123412341234' when repeat string is '1234' and repeat times is 3", function () {
-            assert.equal('123412341234', utils.repeat('1234', 3));
+            assert.strictEqual('123412341234', utils.repeat('1234', 3));
         });
 
         it("should return '' when repeat string is any stirng and repeat times is 0", function () {
-            assert.equal('', utils.repeat(Math.random() + '', 0));
+            assert.strictEqual('', utils.repeat(Math.random() + '', 0));
         });
         
         it("should return '' when repeat string is '' and repeat times is any numbers", function () {
-            assert.equal('', utils.repeat('', Math.round(Math.random() * 100)));
+            assert.strictEqual('', utils.repeat('', Math.round(Math.random() * 100)));
         });
 
         it("", function () {
-            assert.equal('0000', utils.repeat('0', 4));
+            assert.strictEqual('0000', utils.repeat('0', 4));
         });
     });
 
     describe('#pad', function () {
         it("should return 0001 when target is 1 and padStr is 0 and distLen is 4", function () {
-            assert.equal('0001', utils.pad(1, 0, 4));
+            assert.strictEqual('0001', utils.pad(1, 0, 4));
         });
         
         it("should return '0123456abc' when target is 'abc' and padStr is '0123456789' and distLen is 10", function () {
-            assert.equal('0123456abc', utils.pad('abc', '0123456789', 10));
+            assert.strictEqual('0123456abc', utils.pad('abc', '0123456789', 10));
         });
         
         it("should return 'abc0123456' when target is 'abc' and padStr is '0123456789' and distLen is 10 and isBack is true", function () {
-            assert.equal('abc0123456', utils.pad('abc', '0123456789', 10, true));
+            assert.strictEqual('abc0123456', utils.pad('abc', '0123456789', 10, true));
         });
     });
     
     describe('#formatTime', function () {
         it("should return '2019-03-02' when stmp is 1551511567458 and scheme is 'YYYY-MM-DD'", function () {
-            assert.equal('2019-03-02', utils.formatTime(1551511567458, 'YYYY-MM-DD'));
+            assert.strictEqual('2019-03-02', utils.formatTime(1551511567458, 'YYYY-MM-DD'));
         });
 
         it("should return '2019-03-02' when stmp is new Date(1551511567458) and scheme is 'YYYY-MM-DD'", function () {
-            assert.equal('2019-03-02', utils.formatTime(new Date(1551511567458), 'YYYY-MM-DD'));
+            assert.strictEqual('2019-03-02', utils.formatTime(new Date(1551511567458), 'YYYY-MM-DD'));
         });
         
         it("should return '2019-03-02 15:26:07' when stmp is 1551511567458 and scheme is 'YYYY-MM-DD hh:mm:ss'", function () {
-            assert.equal('2019-03-02 15:26:07', utils.formatTime(1551511567458, 'YYYY-MM-DD hh:mm:ss'));
+            assert.strictEqual('2019-03-02 15:26:07', utils.formatTime(1551511567458, 'YYYY-MM-DD hh:mm:ss'));
         });
         
         it("should return '2019-3-2 15:26:7' when stmp is 1551511567458 and scheme is 'YYYY-M-D hh:mm:ss'", function () {
-            assert.equal('2019-3-2 15:26:7', utils.formatTime(1551511567458, 'YYYY-M-D h:m:s'));
+            assert.strictEqual('2019-3-2 15:26:7', utils.formatTime(1551511567458, 'YYYY-M-D h:m:s'));
         });
         
         it("should return '20190302 15:26:07' when stmp is 1551511567458 and scheme is 'YYYY-M-D hh:mm:ss'", function () {
-            assert.equal('20190302 15:26:07', utils.formatTime(1551511567458, 'YYYYMMDD hh:mm:ss'));
+            assert.strictEqual('20190302 15:26:07', utils.formatTime(1551511567458, 'YYYYMMDD hh:mm:ss'));
         });
+    });
+
+    describe('#is', function () {
+        it("should return true when type is 'Number' and target is 0", function () {
+            assert.strictEqual(true, utils.is('Number', 0));
+        });
+        it("should return true when type is 'Object' and target is {}", function () {
+            assert.strictEqual(true, utils.is('Object', {}));
+        });
+        it("should return true when type is 'Array' and target is []", function () {
+            assert.strictEqual(true, utils.is('Array', []));
+        });
+        it("should return true when type is 'NaN' and target is NaN", function () {
+            assert.strictEqual(true, utils.is('NaN', NaN));
+        });
+        it("should return true when type is 'Undefined' and target is undefined", function () {
+            assert.strictEqual(true, utils.is('Undefined', undefined));
+        });
+    });
+
+    describe('#extends', function () {
+
+        var obj = {};
+        var target = {};
+
+        beforeEach(function () {
+            obj = {
+                a: 'a',
+                b: {
+                    b1: 'b1',
+                    b2: ['b21', 'b22', 'b23']
+                },
+                c: [
+                    'c1',
+                    { c21: 'c21', c22: 'c22'}
+                ]
+            };
+            target = {};
+        });
+
+        it("should return the deep copy when isDeep is true", function () {
+            utils.extends(true, target, obj);
+            assert.deepEqual(obj, target);
+            obj.b.b1 = 'b111';
+            obj.c[1].c21 = 'b211';
+            assert.notDeepEqual(obj, target);
+        });
+
+        it("should return the shallow copy when isDeep is false or not spefic", function () {
+            utils.extends(target, obj);
+            assert.deepEqual(obj, target);
+            obj.b.b1 = 'b111';
+            obj.c[1].c21 = 'b211';
+            assert.deepEqual(obj, target);
+        });
+
+        it("should return the copy when isDeep is true and pass many objs", function () {
+            var obj1 = {a: {a: 'a'}, b: 'b', c: 'c'};
+            var obj2 = {a: {a: 'aa'}, c: 'cc', d: 'dd'};
+            utils.extends(true, target, obj1, obj2);
+            assert.deepEqual({a: {a: 'aa'}, b: 'b', c: 'cc', d: 'dd'}, target);
+        });
+
     });
     
 });
