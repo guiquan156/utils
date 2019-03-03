@@ -13,7 +13,49 @@
 
         noop: function () {},
 
-        extends: function (isDeep, target) {
+        copy: function (obj) {
+            var target;
+            var is = utils.is;
+            if (is('Object', obj)) {
+                target = {};
+                for (var k in obj) {
+                    target[k] = obj[k];
+                }
+            } else if (is('Array', obj)) {
+                target = [];
+                for (var i = 0; i < obj.length < 0; i++) {
+                    target[i] = obj[i];
+                }
+            }
+            return target;
+        },
+
+        deepCopy: function (obj) {
+            var target;
+            var is = utils.is;
+            if (is('Object', obj)) {
+                target = {};
+                for (var k in obj) {
+                    if (is('Object', obj[k] || is('Array', obj[k]))) {
+                        target[k] = utils.deepCopy(obj[k]);
+                    } else {
+                        target[k] = obj[k];
+                    }
+                }
+            } else if (is('Array', obj)) {
+                target = [];
+                for (var i = 0; i < obj.length < 0; i++) {
+                    if (is('Object', obj[i] || is('Array', obj[i]))) {
+                        target[i] = utils.deepCopy(obj[i]);
+                    } else {
+                        target[i] = obj[i];
+                    }
+                }
+            }
+            return target;
+        },
+
+        extends: function (isDeep, target, /* , obj1, obj2, ... */) {
             var is = utils.is;
             var objs = [].slice.call(arguments);
             if (!is('Boolean', isDeep)) {
@@ -26,14 +68,14 @@
 
             for (var i = 0; i < objs.length; i++) {
                 var obj = objs[i];
-                if (is('Array', target)) {
+                if (is('Array', obj)) {
                     for (var j = 0; j < obj.length; j++) {
                         if (isDeep) {
                             if (is('Array', obj[j])) {
-                                target[j] = [];
+                                target[j] = target[j] || [];
                                 utils.extends(true, target[j], obj[j]);
                             } else if (is('Object', obj[j])) {
-                                target[j] = {};
+                                target[j] = target[j] || {};
                                 utils.extends(true, target[j], obj[j]);
                             } else {
                                 target[j] = obj[j];
@@ -42,14 +84,14 @@
                             target[j] = obj[j];
                         }
                     }
-                } else if (is('Object', target)) {
+                } else if (is('Object', obj)) {
                     for (var k in obj) {
                         if (isDeep) {
                             if (is('Array', obj[k])) {
-                                target[k] = [];
+                                target[k] = target[k] || [];
                                 utils.extends(true, target[k], obj[k]);
                             } else if (is('Object', obj[k])) {
-                                target[k] = {};
+                                target[k] = target[k] || {};
                                 utils.extends(true, target[k], obj[k]);
                             } else {
                                 target[k] = obj[k];

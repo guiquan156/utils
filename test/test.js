@@ -78,6 +78,56 @@ describe('Utils', function () {
         });
     });
 
+
+    describe('#copy', function () {
+        var obj = {};
+        beforeEach(function () {
+            obj = {
+                a: 'a',
+                b: {
+                    b1: 'b1',
+                    b2: ['b21', 'b22', 'b23']
+                },
+                c: [
+                    'c1',
+                    { c21: 'c21', c22: 'c22'}
+                ]
+            };
+        });
+        it('should return shallow copy', function () {
+            var copy = utils.copy(obj);
+            assert.deepEqual(obj, copy);
+            obj.b.b1 = 'bbbbbbbb';
+            assert.deepEqual(obj, copy);
+            obj.a = 'aaaaaaaaaaaaaaa';
+            assert.notDeepEqual(obj, copy);
+        });
+    });
+
+    describe('#deepCopy', function () {
+        var obj = {};
+        beforeEach(function () {
+            obj = {
+                a: 'a',
+                b: {
+                    b1: 'b1',
+                    b2: ['b21', 'b22', 'b23']
+                },
+                c: [
+                    'c1',
+                    { c21: 'c21', c22: 'c22'}
+                ]
+            };
+        });
+
+        it('should return deep copy', function () {
+            var copy = utils.deepCopy(obj);
+            assert.deepEqual(obj, copy);
+            obj.b.b1 = 'bbbbbbbb';
+            assert.notDeepEqual(obj, copy);
+        });
+    });
+
     describe('#extends', function () {
 
         var obj = {};
@@ -95,11 +145,16 @@ describe('Utils', function () {
                     { c21: 'c21', c22: 'c22'}
                 ]
             };
-            target = {};
+            target = {
+                b: {
+                    b3: 'b2'
+                }
+            };
         });
 
         it("should return the deep copy when isDeep is true", function () {
             utils.extends(true, target, obj);
+            obj.b.b3 = 'b2';
             assert.deepEqual(obj, target);
             obj.b.b1 = 'b111';
             obj.c[1].c21 = 'b211';
@@ -118,6 +173,7 @@ describe('Utils', function () {
             var obj1 = {a: {a: 'a'}, b: 'b', c: 'c'};
             var obj2 = {a: {a: 'aa'}, c: 'cc', d: 'dd'};
             utils.extends(true, target, obj1, obj2);
+            obj.b.b3 = 'b2';
             assert.deepEqual({a: {a: 'aa'}, b: 'b', c: 'cc', d: 'dd'}, target);
         });
 
