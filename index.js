@@ -69,37 +69,27 @@
             for (var i = 0; i < objs.length; i++) {
                 var obj = objs[i];
                 if (is('Array', obj)) {
+                    target = target || [];
                     for (var j = 0; j < obj.length; j++) {
                         if (isDeep) {
-                            if (is('Array', obj[j])) {
-                                target[j] = target[j] || [];
-                                utils.extends(true, target[j], obj[j]);
-                            } else if (is('Object', obj[j])) {
-                                target[j] = target[j] || {};
-                                utils.extends(true, target[j], obj[j]);
-                            } else {
-                                target[j] = obj[j];
-                            }
+                            // target[j] may be not defined, so must assign to it;
+                            target[j] = utils.extends(true, target[j], obj[j]);
                         } else {
                             target[j] = obj[j];
                         }
                     }
                 } else if (is('Object', obj)) {
+                    target = target || {};
                     for (var k in obj) {
                         if (isDeep) {
-                            if (is('Array', obj[k])) {
-                                target[k] = target[k] || [];
-                                utils.extends(true, target[k], obj[k]);
-                            } else if (is('Object', obj[k])) {
-                                target[k] = target[k] || {};
-                                utils.extends(true, target[k], obj[k]);
-                            } else {
-                                target[k] = obj[k];
-                            }
+                            // target[k] may be not defined, so must assign to it;
+                            target[k] = utils.extends(true, target[k], obj[k]);
                         } else {
                             target[k] = obj[k];
                         }
-                    }                    
+                    }
+                } else {
+                    target = obj;
                 }
             }
 
