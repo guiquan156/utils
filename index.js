@@ -57,10 +57,12 @@
             return target;
         },
 
+        toArray: [].slice.call,
+
         // doesn’t consider set and map
         extends: function (isDeep, target, /* , obj1, obj2, ... */) {
             var is = utils.is;
-            var objs = [].slice.call(arguments);
+            var objs = utils.toArray(arguments);
             if (!is('Boolean', isDeep)) {
                 target = isDeep;
                 isDeep = false;
@@ -243,8 +245,28 @@
             return new Function('data', '_escape', tpl)(data, utils.escape);
         },
 
-        debounce: function () {
+        // inspired by underscore;
+        debounce: function (fn, delay) {
+            var timer = null;
+            var result;
 
+            var debounced = function () {
+                var that = this;
+                var args = utils.toArray(arguments);
+                clearTimeout(timer);
+                timer = setTimeout(function () {
+                    result = fn.apply(that, args);
+                }, delay);
+
+                return result;
+            };
+
+            debounced.cancel = function () {
+                clearTimeout(timer);
+                timer = null;
+            };
+
+            return debounced;
         },
 
         throttling: function () {
