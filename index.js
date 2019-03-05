@@ -282,8 +282,30 @@
             return debounced;
         },
 
-        throttling: function () {
+        throttle: function (fn, wait, options) {
+            var timer = null;
+            var prev = new Date().getTime();
 
+            var throttled = function () {
+                var that = this;
+                var args = utils.toArray(arguments);
+                var now = new Date().getTime();
+                var remaining = wait - (now - prev);
+
+                clearTimeout(timer);
+                
+                if (remaining <= 0) {
+                    prev = now;
+                    fn.apply(that, args);
+                } else {
+                    timer = setTimeout(function () {
+                        prev = now;
+                        fn.apply(that, args);
+                    }, remaining);
+                }
+            };
+
+            return throttled;
         },
 
         // only for String Array Object NaN undefined function
