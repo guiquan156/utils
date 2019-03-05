@@ -246,17 +246,30 @@
         },
 
         // inspired by underscore;
-        debounce: function (fn, delay) {
+        debounce: function (fn, wait, immediate) {
             var timer = null;
             var result;
+            var callNow = true;
 
             var debounced = function () {
                 var that = this;
                 var args = utils.toArray(arguments);
+
                 clearTimeout(timer);
-                timer = setTimeout(function () {
-                    result = fn.apply(that, args);
-                }, delay);
+
+                if (immediate) {
+                    if (callNow) {
+                        result = fn.apply(that, args);
+                        callNow = false;
+                    }
+                    setTimeout(function () {
+                        callNow = true;
+                    }, wait);
+                } else {
+                    timer = setTimeout(function () {
+                        result = fn.apply(that, args);
+                    }, wait);
+                }
 
                 return result;
             };
