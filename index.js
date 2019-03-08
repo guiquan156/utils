@@ -309,6 +309,13 @@
                 }
             };
 
+            // cancel throttling, fn will be execute everytime when throttled is called;
+            throttled.cancel = function () {
+                clearTimeout(timer);
+                prev = 0;
+                timer = null;
+            };
+
             return throttled;
         },
 
