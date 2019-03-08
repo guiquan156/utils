@@ -13,6 +13,10 @@
 
         noop: function () {},
 
+        now: function () {
+            return new Date().getTime();
+        },
+
         // doesn’t consider set and map
         copy: function (obj) {
             var target;
@@ -284,12 +288,12 @@
 
         throttle: function (fn, wait, options) {
             var timer = null;
-            var prev = new Date().getTime();
+            var prev = utils.now();
 
             var throttled = function () {
                 var that = this;
                 var args = utils.toArray(arguments);
-                var now = new Date().getTime();
+                var now = utils.now();
                 var remaining = wait - (now - prev);
 
                 clearTimeout(timer);
