@@ -286,24 +286,35 @@
             return debounced;
         },
 
+        // options.leadding = false --> dont execute on the leading
+        // options.tailing = false --> dont execute on the tailing 
         throttle: function (fn, wait, options) {
+            options = options || {};
+
             var timer = null;
-            var prev = utils.now();
+            var prev = 0;
 
             var throttled = function () {
                 var that = this;
                 var args = utils.toArray(arguments);
                 var now = utils.now();
+
+                if (!prev && options.leading === false) prev = now; // leading false --> dont execute
+
                 var remaining = wait - (now - prev);
 
-                clearTimeout(timer);
-                
-                if (remaining <= 0) {
+                if (timer) {
+                    clearTimeout(timer);
+                    timer = null;
+                }
+
+                if (remaining <= 0 || remaining > wait) {
                     prev = now;
-                    fn.apply(that, args);
-                } else {
+                    fn.apply(that, args); // todo
+                } else if (options.trailing !== false) { // canceled or trailing false
                     timer = setTimeout(function () {
-                        prev = now;
+                        prev = options.leading === false ? 0 : utils.now();
+                        timer = null;
                         fn.apply(that, args);
                     }, remaining);
                 }
@@ -312,7 +323,7 @@
             // cancel throttling, fn will be execute everytime when throttled is called;
             throttled.cancel = function () {
                 clearTimeout(timer);
-                prev = 0;
+                prev = -1;
                 timer = null;
             };
 
