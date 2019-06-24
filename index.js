@@ -243,7 +243,7 @@
             data = data || {};
             tpl = tpl.replace(settings.interpolate, "';ret+=$1;ret+='");
             tpl = tpl.replace(settings.escape, "';ret+=_escape($1);ret+='");
-            tpl = tpl.replace(settings.evaluate, "';$1ret+='");
+            tpl = tpl.replace(settings.evaluate, "';$1ret+='").replace(/\n\r?/g, '\\n\);
             tpl = "var ret='';var _print=function(str){ret+=str;};with(data){ret+='" + tpl + "';}return ret;";
 
             return new Function('data', '_escape', tpl)(data, utils.escape);
